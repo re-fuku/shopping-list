@@ -43,5 +43,6 @@ flowchart TB
 - フロントエンドとバックエンド間の連携
 - REST APIの設計
 - データベース設計とCRUD処理
+- DockerFileの作成, Docker Composeの作成方法
 - Dockerコンテナ間の通信設定
 - WSLを用いたLinux環境での開発
