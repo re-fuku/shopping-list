@@ -15,13 +15,11 @@ Webアプリケーションの開発を通じて、フロントエンドから�
 
 
 ## 技術スタック
-- React
-- Vite
-- Python
-- FastAPI
-- PostgreSQL
-- Docker
-- DockerCompose
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 
 
 ## システム構成
@@ -46,3 +44,4 @@ flowchart TB
 - REST APIの設計
 - データベース設計とCRUD処理
 - Dockerコンテナ間の通信設定
+- WSLを用いたLinux環境での開発
