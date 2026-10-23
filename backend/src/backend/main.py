@@ -38,7 +38,6 @@ def regist_purchase(session: Session = Depends(get_session)):
     )
 
     result = session.execute(statement)
-    print("result: ", result)
     session.commit()
 
     return {"update_count": result.rowcount}
