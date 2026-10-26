@@ -14,17 +14,17 @@ type ShoppingItemListProps = {
     items: ShoppingItem[]
     setItems: (items: ShoppingItem[]) => void
     addItem: (item: ShoppingItem) => void
-    updateItem: (id: string, key: keyof ShoppingItem, value: any) => void
-    deleteItem: (id: string) => void
+    updateItem: (id: number, key: keyof ShoppingItem, value: any) => void
+    deleteItem: (id: number) => void
 }
 
 type ShoppingItemRowProps = {
     item: ShoppingItem
-    isEditingID: string
-    setIsEditingID: (isEditingID: string) => void
-    onToggle: (id: string) => void
-    onRename: (id: string, newName: string) => void 
-    onDelete: (id: string) => Promise<boolean>
+    isEditingID: number
+    setIsEditingID: (isEditingID: number | null) => void
+    onToggle: (id: number) => void
+    onRename: (id: number, newName: string) => void 
+    onDelete: (id: number) => Promise<boolean>
 }
 
 
@@ -40,7 +40,7 @@ function ShoppingItemRow({ item, isEditingID, setIsEditingID, onToggle, onRename
             setDraftName(item.name)
         }
 
-        setIsEditingID("")
+        setIsEditingID(null)
     }
 
     const handleDelete = async () => {
@@ -59,7 +59,7 @@ function ShoppingItemRow({ item, isEditingID, setIsEditingID, onToggle, onRename
             )}
         >
             <Checkbox
-                checked={item.is_checked === 1}
+                checked={item.is_checked === true}
                 onCheckedChange={() => onToggle(item.id)}
             />
             
@@ -84,37 +84,37 @@ function ShoppingItemRow({ item, isEditingID, setIsEditingID, onToggle, onRename
 
 export default function ShoppingList({ items, setItems, addItem, updateItem, deleteItem }: ShoppingItemListProps) {
     const [newItemName, setNewItemName] = useState<string>("")
-    const [isEditingID, setIsEditingID] = useState<string>("")
+    const [isEditingID, setIsEditingID] = useState<number | null>(null)
 
-    const unIs_checkedItems = items.filter((item) => item.is_checked === 0 && item.is_purchased === 0)
-    const is_checkedItems = items.filter((item) => item.is_checked === 1 && item.is_purchased === 0)
-    const SHOPPING_API = ""
+    const unIs_checkedItems = items.filter((item) => item.is_checked === false && item.purchased_date === null)
+    const is_checkedItems = items.filter((item) => item.is_checked === true && item.purchased_date === null)
+    const SHOPPING_API = "http://localhost:8000/items"
 
     const handleAddItem = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         const name = newItemName.trim()
-        const id = crypto.randomUUID()
         
         if (!name) return
 
         const res = await fetch(SHOPPING_API, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({id, name}),
+            body: JSON.stringify({name}),
         })
 
         if (!res.ok) {
             alert("アイテムの追加に失敗")
         } else {
-            addItem({id, name, is_checked: 0, is_purchased: 0, purchased_date: ""})
+            const item = await res.json()
+            addItem(item)
         }
 
         setNewItemName("")
     }
 
-    const toggleItem = async (id: string) => {
+    const toggleItem = async (id: number) => {
         const item = items.find((item) => item.id === id)
-        const is_checked = item?.is_checked === 0 ? 1 : 0
+        const is_checked = item?.is_checked === false ? true : false
 
         const res = await fetch(SHOPPING_API, {
             method: "PATCH",
@@ -129,7 +129,7 @@ export default function ShoppingList({ items, setItems, addItem, updateItem, del
         }
     }
 
-    const handleDeleteItem = async (id: string) => {
+    const handleDeleteItem = async (id: number) => {
 
         try {
             const [res] = await Promise.all([
@@ -154,7 +154,7 @@ export default function ShoppingList({ items, setItems, addItem, updateItem, del
         }
     }
 
-    const handleRenameItem = async (id: string, newName: string) => {
+    const handleRenameItem = async (id: number, newName: string) => {
         try {
             const res = await fetch(SHOPPING_API, {
                 method: "PATCH",

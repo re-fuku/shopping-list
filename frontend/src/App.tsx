@@ -11,23 +11,24 @@ import ShoppingDayList from "@/components/ShoppingDayList"
 import { Input } from "@/components/ui/input"
 
 export type ShoppingItem = {
-    id: string
+    id: number
     name: string
-    is_checked: number
-    is_purchased: number
-    purchased_date: string    
+    is_checked: boolean
+    purchased_date: Date | null
+    created_at: Date
 }
 
 export default function App() {
     const [items, setItems] = useState<ShoppingItem[]>([])
-    const [selectedDay, setSelectedDay] = useState<string>("")
+    const [selectedDay, setSelectedDay] = useState<Date | null>(null)
     const [searchItem, setSearchItem] = useState<string>("")
 
+    console.log("items: ", items)
     const addItem = (item: ShoppingItem) => {
         setItems((prevItems) => [...prevItems, item])
     }
     
-    const updateItem = (id: string, key: keyof ShoppingItem, value: any) => {
+    const updateItem = (id: number, key: keyof ShoppingItem, value: any) => {
         setItems((prevItems) => 
             prevItems.map((prevItem) => 
                 (prevItem.id === id ? {...prevItem, [key]: value}: prevItem)
@@ -35,7 +36,7 @@ export default function App() {
         )
     }
 
-    const deleteItem = (id: string) => {
+    const deleteItem = (id: number) => {
         setItems((prevItems) => prevItems.filter((item) => item.id !== id))
     }
 
@@ -57,7 +58,7 @@ export default function App() {
                     <CardContent className="relative">
                         <TabsContent value="list" className="max-w-md">
                             <ShoppingList
-                                items={items.filter((item) => item.is_purchased === 0)}
+                                items={items.filter((item) => item.purchased_date === null)}
                                 setItems={setItems}
                                 addItem={addItem}
                                 updateItem={updateItem}
@@ -75,14 +76,14 @@ export default function App() {
                             />
 
                             <ShoppingCalendar
-                                items={items.filter((item) => item.is_purchased === 1 && item.name.includes(searchItem))}
+                                items={items.filter((item) => item.purchased_date === null && item.name.includes(searchItem))}
                                 mode="single"
-                                onSelect={(date) => date?setSelectedDay(format(date, "yyyy-MM-dd")): ""}
+                                onSelect={(date) => date?setSelectedDay(date): null}
                             />
 
                             {selectedDay && (
                                 <ShoppingDayList
-                                    items={items.filter((item) => item.is_purchased === 1 && item.purchased_date === selectedDay)}
+                                    items={items.filter((item) => item.is_checked === true && item.purchased_date === selectedDay)}
                                     selectedDay={selectedDay}
                                     setSelectedDay={setSelectedDay}
                                     deleteItem={deleteItem}

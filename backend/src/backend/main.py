@@ -5,12 +5,13 @@ from datetime import datetime, timezone
 
 from backend import models
 from backend.database import engine, get_session
+from backend.models import ItemCreate
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["htt://localhost:5173"],
+    allow_origins=["http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -27,8 +28,8 @@ def get_items(session: Session = Depends(get_session)):
     return items
 
 @app.post("/items")
-def add_item(name: str = Form(), session: Session = Depends(get_session)):
-    item = models.Item(name=name)
+def add_item(item_data: ItemCreate, session: Session = Depends(get_session)):
+    item = models.Item(name=item_data.name)
 
     session.add(item)
     session.commit()
