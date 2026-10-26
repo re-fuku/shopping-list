@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, Form, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, Session, select, update
 from datetime import datetime, timezone
 
@@ -6,6 +7,15 @@ from backend import models
 from backend.database import engine, get_session
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["htt://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 SQLModel.metadata.create_all(engine)
 
