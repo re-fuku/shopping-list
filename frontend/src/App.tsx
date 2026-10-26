@@ -40,57 +40,60 @@ export default function App() {
     }
 
     return (
-        <Card className="max-w-md">
-            <Tabs defaultValue="list">
-                <CardHeader>
-                    <TabsList>
-                        <TabsTrigger value="list" >
-                            <ClipboardList className="mr-2 h-4 w-4" />
-                        </TabsTrigger>
-                        <TabsTrigger value="calendar">
-                            <CalendarDays className="mr-2 h-4 w-4" />
-                        </TabsTrigger>
-                    </TabsList>
-                </CardHeader>
+        <div className="w-full max-h-3/4 mt-20 flex justify-center">
+            <Card className="w-120">
+                <Tabs defaultValue="list">
+                    <CardHeader>
+                        <TabsList>
+                            <TabsTrigger value="list" >
+                                <ClipboardList className="mr-2 h-4 w-4" />
+                            </TabsTrigger>
+                            <TabsTrigger value="calendar">
+                                <CalendarDays className="mr-2 h-4 w-4" />
+                            </TabsTrigger>
+                        </TabsList>
+                    </CardHeader>
 
-                <CardContent className="relative">
-                    <TabsContent value="list" className="max-w-md">
-                        <ShoppingList
-                            items={items.filter((item) => item.is_purchased === 0)}
-                            setItems={setItems}
-                            addItem={addItem}
-                            updateItem={updateItem}
-                            deleteItem={deleteItem}
-                        />
-                    </TabsContent>
-
-                    <TabsContent value="calendar">
-                        <Input
-                            className="w-30 absolute -top-10 right-5"
-                            placeholder="🔍検索"
-                            value={searchItem}
-                            onChange={(e) => setSearchItem(e.target.value)}
-                            onFocus={(e) => e.target.select()}
-                        />
-
-                        <ShoppingCalendar
-                            items={items.filter((item) => item.is_purchased === 1 && item.name.includes(searchItem))}
-                            mode="single"
-                            onSelect={(date) => date?setSelectedDay(format(date, "yyyy-MM-dd")): ""}
-                        />
-
-                        {selectedDay && (
-                            <ShoppingDayList
-                                items={items.filter((item) => item.is_purchased === 1 && item.purchased_date === selectedDay)}
-                                selectedDay={selectedDay}
-                                setSelectedDay={setSelectedDay}
-                                deleteItem={deleteItem}
+                    <CardContent className="relative">
+                        <TabsContent value="list" className="max-w-md">
+                            <ShoppingList
+                                items={items.filter((item) => item.is_purchased === 0)}
+                                setItems={setItems}
+                                addItem={addItem}
                                 updateItem={updateItem}
+                                deleteItem={deleteItem}
                             />
-                        )}
-                    </TabsContent>
-                </CardContent>
-            </Tabs>
-        </Card>
+                        </TabsContent>
+
+                        <TabsContent value="calendar">
+                            <Input
+                                className="w-30 absolute -top-10 right-5"
+                                placeholder="🔍検索"
+                                value={searchItem}
+                                onChange={(e) => setSearchItem(e.target.value)}
+                                onFocus={(e) => e.target.select()}
+                            />
+
+                            <ShoppingCalendar
+                                items={items.filter((item) => item.is_purchased === 1 && item.name.includes(searchItem))}
+                                mode="single"
+                                onSelect={(date) => date?setSelectedDay(format(date, "yyyy-MM-dd")): ""}
+                            />
+
+                            {selectedDay && (
+                                <ShoppingDayList
+                                    items={items.filter((item) => item.is_purchased === 1 && item.purchased_date === selectedDay)}
+                                    selectedDay={selectedDay}
+                                    setSelectedDay={setSelectedDay}
+                                    deleteItem={deleteItem}
+                                    updateItem={updateItem}
+                                />
+                            )}
+                        </TabsContent>
+                    </CardContent>
+                </Tabs>
+            </Card>
+        </div>
+        
     )
 }
