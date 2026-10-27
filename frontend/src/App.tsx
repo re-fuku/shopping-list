@@ -23,7 +23,6 @@ export default function App() {
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
     const [searchItem, setSearchItem] = useState<string>("")
 
-    console.log("items: ", items)
     const addItem = (item: ShoppingItem) => {
         setItems((prevItems) => [...prevItems, item])
     }

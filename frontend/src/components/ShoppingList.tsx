@@ -1,7 +1,6 @@
-'use client'
-
 import { useState, useEffect, type FormEvent } from "react"
 import { cn } from "@/lib/utils"
+import { SHOPPING_API } from "@/lib/endPoints"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -20,7 +19,7 @@ type ShoppingItemListProps = {
 
 type ShoppingItemRowProps = {
     item: ShoppingItem
-    isEditingID: number
+    isEditingID: number | null
     setIsEditingID: (isEditingID: number | null) => void
     onToggle: (id: number) => void
     onRename: (id: number, newName: string) => void 
@@ -88,7 +87,6 @@ export default function ShoppingList({ items, setItems, addItem, updateItem, del
 
     const unIs_checkedItems = items.filter((item) => item.is_checked === false && item.purchased_date === null)
     const is_checkedItems = items.filter((item) => item.is_checked === true && item.purchased_date === null)
-    const SHOPPING_API = "http://localhost:8000/items"
 
     const handleAddItem = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -114,12 +112,12 @@ export default function ShoppingList({ items, setItems, addItem, updateItem, del
 
     const toggleItem = async (id: number) => {
         const item = items.find((item) => item.id === id)
-        const is_checked = item?.is_checked === false ? true : false
+        const is_checked = !item?.is_checked
 
-        const res = await fetch(SHOPPING_API, {
+        const res = await fetch(`${SHOPPING_API}/${id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({id, is_checked}),
+            body: JSON.stringify({is_checked}),
         })
 
         if (!res.ok) {
@@ -133,10 +131,9 @@ export default function ShoppingList({ items, setItems, addItem, updateItem, del
 
         try {
             const [res] = await Promise.all([
-                fetch(SHOPPING_API,{
+                fetch(`${SHOPPING_API}/${id}`,{
                     method: "DELETE",
                     headers: { "Content-Type": "application/json"},
-                    body: JSON.stringify({id})
                 }),
                 new Promise((resolve) => setTimeout(resolve, 500))
             ])
@@ -156,10 +153,10 @@ export default function ShoppingList({ items, setItems, addItem, updateItem, del
 
     const handleRenameItem = async (id: number, newName: string) => {
         try {
-            const res = await fetch(SHOPPING_API, {
+            const res = await fetch(`${SHOPPING_API}/${id}`, {
                 method: "PATCH",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({id, name: newName}),
+                body: JSON.stringify({name: newName}),
             })
 
             if (!res.ok) {
@@ -176,8 +173,9 @@ export default function ShoppingList({ items, setItems, addItem, updateItem, del
     const purchasedItem = async () => {
 
         try {
-            const res = await fetch(`${SHOPPING_API}/purchase`,{
-                method: "POST", 
+            const res = await fetch(`${SHOPPING_API}/purchase-date`,{
+                method: "PATCH", 
+                headers: {"Content-Type": "application/json"},
             })
 
             if (!res.ok) {
@@ -193,7 +191,7 @@ export default function ShoppingList({ items, setItems, addItem, updateItem, del
     }
 
     const fetchItems = async () => {
-        const res = await fetch(`${SHOPPING_API}`)
+        const res = await fetch(SHOPPING_API)
 
         if(!res.ok) {
             console.error("アイテムの取得に失敗")

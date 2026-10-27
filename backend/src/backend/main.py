@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 from backend import models
 from backend.database import engine, get_session
-from backend.models import ItemCreate
+from backend.models import Item, ItemCreate
 
 app = FastAPI()
 
@@ -22,14 +22,14 @@ SQLModel.metadata.create_all(engine)
 
 @app.get("/items")
 def get_items(session: Session = Depends(get_session)):
-    statement = select(models.Item)
+    statement = select(Item)
     items = session.exec(statement).all()
 
     return items
 
 @app.post("/items")
 def add_item(item_data: ItemCreate, session: Session = Depends(get_session)):
-    item = models.Item(name=item_data.name)
+    item = Item(name=item_data.name)
 
     session.add(item)
     session.commit()
@@ -40,10 +40,10 @@ def add_item(item_data: ItemCreate, session: Session = Depends(get_session)):
 @app.patch("/items/purchase-date")
 def regist_purchase(session: Session = Depends(get_session)):
     statement = (
-        update(models.Item)
+        update(Item)
         .where(
-            models.Item.is_purchased == True,
-            models.Item.purchased_date == None
+            Item.is_checked == True,
+            Item.purchased_date == None
         )
         .values(purchased_date=datetime.now(timezone.utc))
     )
@@ -55,7 +55,7 @@ def regist_purchase(session: Session = Depends(get_session)):
 
 @app.delete("/items/{item_id}")
 def delete_item(item_id: int, session: Session = Depends(get_session)):
-    item = session.get(models.Item, item_id)
+    item = session.get(Item, item_id)
 
     if item is None:
         raise HTTPException(
@@ -69,8 +69,10 @@ def delete_item(item_id: int, session: Session = Depends(get_session)):
     return {"message": "アイテム削除成功"}
 
 @app.patch("/items/{item_id}")
-def update_item(item_id: int, item_data: models.ItemUpdate = Form(), session: Session = Depends(get_session)):
-    item = session.get(models.Item, item_id)
+def update_item(item_id: int, item_data: Item, session: Session = Depends(get_session)):
+    item = session.get(Item, item_id)
+    print("item_id: ", item_id)
+    print("item_data: ", item_data)
 
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
