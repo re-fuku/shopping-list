@@ -1,7 +1,6 @@
-'use client'
-
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
+import { SHOPPING_API } from "@/lib/endPoints"
 import { format } from "date-fns"
 import { ja } from "date-fns/locale"
 import type { ShoppingItem } from "@/App"
@@ -14,26 +13,23 @@ import { TrashIcon, CalendarDays as CalendarIcon } from "lucide-react"
 
 type ShoppingDayListProps = {
     items: ShoppingItem[]
-    selectedDay: string
-    setSelectedDay: (day: string) => void
-    updateItem: (id: string, key: keyof ShoppingItem, value: any) => void
-    deleteItem: (id: string) => void
+    selectedDay: Date | null
+    setSelectedDay: (date: Date | null) => void
+    updateItem: (id: number, key: keyof ShoppingItem, value: any) => void
+    deleteItem: (id: number) => void
 }
 
 type ItemRowProps = {
     item: ShoppingItem
-    updateItem: (id: string, key: keyof ShoppingItem, value: any) => void
-    deleteItem: (id: string) => void
+    updateItem: (id: number, key: keyof ShoppingItem, value: any) => void
+    deleteItem: (id: number) => void
 }
 
 type PopoverCalendarProps = {
     item: ShoppingItem
-    updateItem: (id: string, key: keyof ShoppingItem, value: any) => void
+    updateItem: (id: number, key: keyof ShoppingItem, value: any) => void
     setIsMoving: (moving: boolean) => void
 }
-
-const SHOPPING_API = ""
-
 
 function PopoverCalendar({item, updateItem, setIsMoving}: PopoverCalendarProps) {
     const [open, setOpen] = useState<boolean>(false)
@@ -41,16 +37,15 @@ function PopoverCalendar({item, updateItem, setIsMoving}: PopoverCalendarProps) 
     const id = item.id
 
     const handleUpdateItem = async (date: Date) => {
-
         setOpen(false)
         setIsMoving(true)
 
         try {
             const [res] = await Promise.all([
-                fetch(SHOPPING_API,{
+                fetch(`${SHOPPING_API}/${id}`,{
                     method: "PATCH",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({id, purchased_date: format(date, "yyyy-MM-dd") })
+                    body: JSON.stringify({purchased_date: date})
                 }),
                 new Promise((resolve) => setTimeout(resolve, 500))
             ])
@@ -59,7 +54,7 @@ function PopoverCalendar({item, updateItem, setIsMoving}: PopoverCalendarProps) 
                 setIsMoving(false)
                 alert("購入日付更新に失敗")
             } else {
-                updateItem(id, "purchased_date", format(date,"yyyy-MM-dd"))
+                updateItem(id, "purchased_date", date)
             }
         } catch(e) {
             setIsMoving(false)
@@ -72,7 +67,7 @@ function PopoverCalendar({item, updateItem, setIsMoving}: PopoverCalendarProps) 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger className="flex gap-2 items-center">
-                <span>{purchased_date}</span>
+                {purchased_date? (<span>{format(purchased_date, "yyyy-MM-dd")}</span>): ""}
                 <CalendarIcon/>
             </PopoverTrigger>
 
@@ -91,15 +86,14 @@ function PopoverCalendar({item, updateItem, setIsMoving}: PopoverCalendarProps) 
 function ItemRow({item, updateItem, deleteItem}: ItemRowProps) {
     const [isMoving, setIsMoving] = useState<boolean>(false)
 
-    const handleDeleteItem = async (id: string) => {
+    const handleDeleteItem = async (id: number) => {
 
         setIsMoving(true)
         try {
             const [res] = await Promise.all([
-                fetch(SHOPPING_API, {
+                fetch(`${SHOPPING_API}/${id}`, {
                     method: "DELETE",
                     headers: { "Content-Type": "application/json"},
-                    body: JSON.stringify({id})
                 }),
                 new Promise((resolve) => setTimeout(resolve,500))
             ])
@@ -144,7 +138,7 @@ export default function ShoppingDayList({ items, selectedDay, setSelectedDay, up
 
     const handleOpenChange = (open: boolean) => {
         setSheetOpen(open)
-        setSelectedDay("")
+        setSelectedDay(null)
     }
 
     useEffect(() => {
@@ -154,7 +148,7 @@ export default function ShoppingDayList({ items, selectedDay, setSelectedDay, up
         <Sheet open={sheetOpen} onOpenChange={(open) => handleOpenChange(open)}>
             <SheetContent side={"right"}>
                 <SheetHeader>
-                    <SheetTitle>{selectedDay}</SheetTitle>
+                    <SheetTitle>{selectedDay && format(selectedDay, "yyyy-MM-dd")}</SheetTitle>
                 </SheetHeader>
 
                 <div className="grid grid-cols-[auto_1fr_auto] gap-x-3 gap-y-1 m-3">

@@ -1,7 +1,6 @@
-'use client'
-
 import { useState } from "react"
-import { format } from "date-fns"
+import { isSameDay } from "date-fns"
+import { tz } from "@date-fns/tz"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ClipboardList, CalendarDays } from "lucide-react"
@@ -22,7 +21,7 @@ export default function App() {
     const [items, setItems] = useState<ShoppingItem[]>([])
     const [selectedDay, setSelectedDay] = useState<Date | null>(null)
     const [searchItem, setSearchItem] = useState<string>("")
-
+    
     const addItem = (item: ShoppingItem) => {
         setItems((prevItems) => [...prevItems, item])
     }
@@ -37,6 +36,12 @@ export default function App() {
 
     const deleteItem = (id: number) => {
         setItems((prevItems) => prevItems.filter((item) => item.id !== id))
+    }
+
+    const checkSameDay  = (purchase_date : Date, selectedDay: Date) => {
+        const isChecked = isSameDay(new Date(purchase_date), selectedDay, {in: tz("Asia/Tokyo")})
+
+        return isChecked
     }
 
     return (
@@ -75,14 +80,14 @@ export default function App() {
                             />
 
                             <ShoppingCalendar
-                                items={items.filter((item) => item.purchased_date === null && item.name.includes(searchItem))}
+                                items={items.filter((item) => item.purchased_date !== null && item.name.includes(searchItem))}
                                 mode="single"
-                                onSelect={(date) => date?setSelectedDay(date): null}
+                                onSelect={(date) => setSelectedDay(date? date:null)}
                             />
 
                             {selectedDay && (
                                 <ShoppingDayList
-                                    items={items.filter((item) => item.is_checked === true && item.purchased_date === selectedDay)}
+                                    items={items.filter((item) => item.is_checked === true && item.purchased_date && checkSameDay(item.purchased_date, selectedDay))}
                                     selectedDay={selectedDay}
                                     setSelectedDay={setSelectedDay}
                                     deleteItem={deleteItem}

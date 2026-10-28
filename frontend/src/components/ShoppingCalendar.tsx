@@ -12,6 +12,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
 import type { ShoppingItem } from "@/App"
+import { format } from "date-fns"
 import { ja } from "date-fns/locale"
 
 function ShoppingCalendar({
@@ -30,7 +31,7 @@ function ShoppingCalendar({
   items?: ShoppingItem[],
 }) {
   const defaultClassNames = getDefaultClassNames()
-
+  
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
@@ -195,7 +196,10 @@ function CalendarDayButton({
   const defaultClassNames = getDefaultClassNames()
 
   const ref = React.useRef<HTMLButtonElement>(null)
-  const dayItems = items?.filter((item) => item.purchased_date === day.isoDate)
+  const dayItems = items?.filter((item) => 
+    (item.purchased_date !== null && 
+      format(item.purchased_date, "yyyy-MM-dd") === format(day.date, "yyyy-MM-dd")
+    ))
   const hasItems = dayItems?.length !== 0 || false
 
   React.useEffect(() => {

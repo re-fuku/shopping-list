@@ -3,9 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import SQLModel, Session, select, update
 from datetime import datetime, timezone
 
-from backend import models
 from backend.database import engine, get_session
-from backend.models import Item, ItemCreate
+from backend.models import Item, ItemCreate, ItemUpdate
 
 app = FastAPI()
 
@@ -69,10 +68,9 @@ def delete_item(item_id: int, session: Session = Depends(get_session)):
     return {"message": "アイテム削除成功"}
 
 @app.patch("/items/{item_id}")
-def update_item(item_id: int, item_data: Item, session: Session = Depends(get_session)):
+def update_item(item_id: int, item_data: ItemUpdate, session: Session = Depends(get_session)):
     item = session.get(Item, item_id)
-    print("item_id: ", item_id)
-    print("item_data: ", item_data)
+    print("item: ", item)
 
     if item is None:
         raise HTTPException(status_code=404, detail="Item not found")
