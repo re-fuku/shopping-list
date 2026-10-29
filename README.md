@@ -82,7 +82,8 @@ Dockerが利用できる環境で以下を実施
 
 ## 学習内容
 - フロントエンドとバックエンド間の連携
-- REST APIの設計
-- データベース作成とCRUD処理
-- DockerFileの作成, Docker Composeの作成方法
-- コンテナで作成したDBへの接続、操作方法
+- Reactを使用したフロントエンドの開発
+- FastAPIを使用したREST APIの設計とCRUD処理の実装
+- PostgreSQLのテーブルの作成方法とデータベース操作
+- Dockerfileの作成, Docker Composeによる複数のコンテナの管理
+- Dockerコンテナからのデータベース接続と操作
