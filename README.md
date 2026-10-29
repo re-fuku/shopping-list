@@ -1,7 +1,7 @@
 # 買い物リスト
 <p align="center">
-    <img src="docs/imges/shopping-list.png" width="40%">
-    <img src="docs/imges/calendar.png" width="40%">
+    <img src="docs/images/shopping-list.png" width="40%">
+    <img src="docs/images/calendar.png" width="40%">
 </p>
 
 ## 目的
@@ -51,14 +51,30 @@ flowchart TB
 
 ## 環境構築方法
 Dockerが利用できる環境で以下を実施
+1. リポジトリのクローン
+    ```bash
+    git clone https://github.com/re-fuku/shopping-list.git
+    cd shopping-list
+    ```
 
-```
-git clone https://github.com/re-fuku/shopping-list.git
-cd shopping-list
+2. 環境変数の設定
+    .env.exampleをコピーして.envを作成
+    ```bash
+    cp .env.example .env
+    ```
 
-# コンテナの起動
-docker compose up -d
-```
+    .env内の以下の3項目を任意の値に変更
+    ```dotenv
+    POSTGRES_USER=user_name
+    POSTGRES_PASSWORD=password
+    POSTGRES_DB=db_name
+    ```
+
+3. コンテナを起動
+    以下のコマンドでコンテナを起動
+    ```bash
+    docker compose up -d
+    ```
 
 ### 接続先
 - フロントエンド: http://localhost:5173/
@@ -67,8 +83,6 @@ docker compose up -d
 ## 学習内容
 - フロントエンドとバックエンド間の連携
 - REST APIの設計
-- データベース設計とCRUD処理
+- データベース作成とCRUD処理
 - DockerFileの作成, Docker Composeの作成方法
 - コンテナで作成したDBへの接続、操作方法
-- Dockerコンテナ間の通信設定
-- WSLを用いたLinux環境での開発
