@@ -50,15 +50,19 @@ flowchart TB
 ```
 
 ## 環境構築方法
+Dockerが利用できる環境で以下を実施
+
 ```
+git clone https://github.com/re-fuku/shopping-list.git
+cd shopping-list
+
 # コンテナの起動
 docker compose up -d
 ```
 
-### React + Vite
-- http://localhost:5173/
-### FastAPI
-- http://localhost:8000/docs
+### 接続先
+- フロントエンド: http://localhost:5173/
+- APIドキュメント: http://localhost:8000/docs
 
 ## 学習内容
 - フロントエンドとバックエンド間の連携
