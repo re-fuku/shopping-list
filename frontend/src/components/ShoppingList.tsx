@@ -71,7 +71,12 @@ function ShoppingItemRow({ item, isEditingID, setIsEditingID, onToggle, onRename
                     onKeyDown={(e) => e.key === "Enter" && commitEdit()}
                 />
             ) : (
-                <span onClick={() => setIsEditingID(item.id)}>{item.name}</span>
+                <span
+                    className="flex justify-start"
+                    onClick={() => setIsEditingID(item.id)}
+                >
+                    {item.name}
+                </span>
             )}
 
             <Button onClick={handleDelete} disabled={isMoving}>
