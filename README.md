@@ -12,6 +12,7 @@ Webアプリケーションの開発を通じて、フロントエンドから�
 - 商品情報の編集
 - 商品の削除
 - 日付をカレンダーで表示
+- カレンダー表示する項目の検索機能
 
 
 ## 技術スタック
@@ -26,9 +27,12 @@ Webアプリケーションの開発を通じて、フロントエンドから�
 ```mermaid
 flowchart TB
     User[ユーザー]
-    Frontend[React + Vite]
-    Backend[FastAPI]
-    DB[PostgreSQL]
+
+    subgraph Docker["Docker環境"]
+        Frontend[React + Vite]
+        Backend[FastAPI]
+        DB[PostgreSQL]
+    end
 
     User --> Frontend
     Frontend --> |HTTP / REST API| Backend
@@ -36,7 +40,8 @@ flowchart TB
 
 ```
 
-## ディレクトリ構成
+## 環境構築方法
+
 
 
 ## 学習内容
