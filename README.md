@@ -1,4 +1,8 @@
 # 買い物リスト
+<p align="center">
+    <img src="docs/imges/shopping-list.png" width="40%">
+    <img src="docs/imges/calendar.png" width="40%">
+</p>
 
 ## 目的
 Webアプリケーションの開発を通じて、フロントエンドからデータベースまでの基本的な仕組みを理解すること
@@ -51,6 +55,10 @@ flowchart TB
 docker compose up -d
 ```
 
+### React + Vite
+- http://localhost:5173/
+### FastAPI
+- http://localhost:8000/docs
 
 ## 学習内容
 - フロントエンドとバックエンド間の連携
