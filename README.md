@@ -18,7 +18,6 @@ Webアプリケーションの開発を通じて、フロントエンドから�
 - 日付をカレンダーで表示
 - カレンダー表示する項目の検索機能
 
-
 ## 技術スタック
 ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
@@ -26,6 +25,10 @@ Webアプリケーションの開発を通じて、フロントエンドから�
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 
+## 開発環境
+- OS: Ubuntu (WSL2)
+- コンテナ: Docker Desktop
+- バージョン管理: Git
 
 ## システム構成
 ```mermaid
