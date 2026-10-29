@@ -25,6 +25,11 @@ Webアプリケーションの開発を通じて、フロントエンドから�
 
 ## システム構成
 ```mermaid
+---
+config:
+    theme: default
+---
+
 flowchart TB
     User[ユーザー]
 
@@ -41,7 +46,10 @@ flowchart TB
 ```
 
 ## 環境構築方法
-
+```
+# コンテナの起動
+docker compose up -d
+```
 
 
 ## 学習内容
